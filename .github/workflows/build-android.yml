@@ -65,12 +65,19 @@ jobs:
       run: |
         # Wait for buildozer to download python-for-android, then fix the files
         buildozer android update || true
+        # Fix .pxi files
         find .buildozer -name "*.pxi" -exec sed -i 's/isinstance(arg, long)/isinstance(arg, int)/g' {} \;
         find .buildozer -name "*.pxi" -exec sed -i 's/, long)/, int)/g' {} \;
         find .buildozer -name "*.pxi" -exec sed -i 's/(long/(int/g' {} \;
         find .buildozer -name "*.pxi" -exec sed -i 's/long: /int: /g' {} \;
         find .buildozer -name "*.pxi" -exec sed -i "s/long: '/int: '/g" {} \;
         find .buildozer -name "*.pxi" -exec sed -i 's/tp == long/tp == int/g' {} \;
+        # Fix .pyx files
+        find .buildozer -name "*.pyx" -exec sed -i 's/(long, int)/(int, int)/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/cdef long/cdef long long/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/= long(/= int(/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/def long(self):/def __int__(self):/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/return long(/return int(/g' {} \;
         
 
     - name: Build APK with Buildozer
