@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements - VERSIONS COMPATIBLES STABILISÉES
 # ⚠️ CHANGEMENT IMPORTANT: Versions testées et compatibles
-requirements = python3,kivy,pyjnius
+requirements = python3,kivy,pyjnius==1.4.2
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
