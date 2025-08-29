@@ -79,9 +79,13 @@ jobs:
         find .buildozer -name "*.pyx" -exec sed -i 's/def long(self):/def __int__(self):/g' {} \;
         find .buildozer -name "*.pyx" -exec sed -i 's/return long(/return int(/g' {} \;
         find .buildozer -name "*.pyx" -exec sed -i 's/cdef long long size/cdef long long size/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/__init__(self, long/__init__(self, long long/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/cdef void grow(self, long /cdef void grow(self, long long /g' {} \;
         # Fix .pxd files  
         find .buildozer -name "*.pxd" -exec sed -i 's/cdef long size/cdef long long size/g' {} \;
         find .buildozer -name "*.pxd" -exec sed -i 's/cdef void grow(self, long/cdef void grow(self, long long/g' {} \;
+        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_size/cdef long long block_size/g' {} \;
+        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_count/cdef long long block_count/g' {} \;
         
 
     - name: Build APK with Buildozer
