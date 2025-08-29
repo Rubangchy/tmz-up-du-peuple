@@ -292,7 +292,7 @@ p4a.url = https://github.com/kivy/python-for-android
 #p4a.branch = release-2022.12.20
 
 # (str) python-for-android specific commit to use, defaults to HEAD, must be within p4a.branch
-p4a.commit = v2023.06.21
+#p4a.commit = v2023.06.21
 
 # (str) python-for-android git clone directory
 #p4a.source_dir =
