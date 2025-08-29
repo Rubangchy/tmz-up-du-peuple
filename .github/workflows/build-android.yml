@@ -61,6 +61,14 @@ jobs:
         path: .buildozer
         key: ${{ runner.os }}-buildozer-project-${{ hashFiles('buildozer.spec') }}
 
+    - name: Fix pyjnius long type compatibility
+      run: |
+        # Wait for buildozer to download python-for-android, then fix the files
+        buildozer android update || true
+        find .buildozer -name "*.pxi" -exec sed -i 's/isinstance(arg, long)/isinstance(arg, int)/g' {} \;
+        find .buildozer -name "*.pxi" -exec sed -i 's/, long)/, int)/g' {} \;
+        find .buildozer -name "*.pxi" -exec sed -i 's/(long/(int/g' {} \;
+
     - name: Build APK with Buildozer
       run: |
         buildozer android debug
