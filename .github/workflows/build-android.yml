@@ -68,6 +68,9 @@ jobs:
         find .buildozer -name "*.pxi" -exec sed -i 's/isinstance(arg, long)/isinstance(arg, int)/g' {} \;
         find .buildozer -name "*.pxi" -exec sed -i 's/, long)/, int)/g' {} \;
         find .buildozer -name "*.pxi" -exec sed -i 's/(long/(int/g' {} \;
+        find .buildozer -name "*.pxi" -exec sed -i 's/long: /int: /g' {} \;
+        find .buildozer -name "*.pxi" -exec sed -i "s/long: '/int: '/g" {} \;
+        
 
     - name: Build APK with Buildozer
       run: |
