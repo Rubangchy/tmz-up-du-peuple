@@ -86,6 +86,18 @@ jobs:
         find .buildozer -name "*.pxd" -exec sed -i 's/cdef void grow(self, long/cdef void grow(self, long long/g' {} \;
         find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_size/cdef long long block_size/g' {} \;
         find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_count/cdef long long block_count/g' {} \;
+        # Fix noexcept issues in specific files
+        find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/char \*data, int datasize) with gil:/char *data, int datasize) noexcept with gil:/g' {} \;
+        find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/void \*c_player, GstMessage \*message) with gil:/void *c_player, GstMessage *message) noexcept with gil:/g' {} \;
+        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/userdata, SDL_Event \*event) with gil:/userdata, SDL_Event *event) noexcept with gil:/g' {} \;
+        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/const SDL_Point\* pts, void\* data) with gil:/const SDL_Point* pts, void* data) noexcept with gil:/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/long (\* seek) (SDL_RWops \* context, long offset,int whence)/long (* seek) (SDL_RWops * context, long offset,int whence) noexcept/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* read) ( SDL_RWops \* context, void \*ptr, size_t size, size_t maxnum)/size_t(* read) ( SDL_RWops * context, void *ptr, size_t size, size_t maxnum) noexcept/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* write) (SDL_RWops \* context, void \*ptr,size_t size, size_t num)/size_t(* write) (SDL_RWops * context, void *ptr,size_t size, size_t num) noexcept/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/int (\* close) (SDL_RWops \* context)/int (* close) (SDL_RWops * context) noexcept/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t size, size_t num):$/size_t size, size_t num) noexcept:/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef int rwops_bytesio_close(SDL_RWops \*context):/cdef int rwops_bytesio_close(SDL_RWops *context) noexcept:/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef SDL_RWops \*rwops_bridge_to_bytesio(byteio):/cdef SDL_RWops *rwops_bridge_to_bytesio(byteio) noexcept:/g' {} \;
         
 
     - name: Build APK with Buildozer
