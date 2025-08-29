@@ -91,6 +91,7 @@ jobs:
         find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/void \*c_player, GstMessage \*message) with gil:/void *c_player, GstMessage *message) noexcept with gil:/g' {} \;
         find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/userdata, SDL_Event \*event) with gil:/userdata, SDL_Event *event) noexcept with gil:/g' {} \;
         find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/const SDL_Point\* pts, void\* data) with gil:/const SDL_Point* pts, void* data) noexcept with gil:/g' {} \;
+        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/cpdef SDL_WindowShapeMode sdl_window_mode/cdef SDL_WindowShapeMode sdl_window_mode/g' {} \;
         find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/long (\* seek) (SDL_RWops \* context, long offset,int whence)/long (* seek) (SDL_RWops * context, long offset,int whence) noexcept/g' {} \;
         find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* read) ( SDL_RWops \* context, void \*ptr, size_t size, size_t maxnum)/size_t(* read) ( SDL_RWops * context, void *ptr, size_t size, size_t maxnum) noexcept/g' {} \;
         find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* write) (SDL_RWops \* context, void \*ptr,size_t size, size_t num)/size_t(* write) (SDL_RWops * context, void *ptr,size_t size, size_t num) noexcept/g' {} \;
@@ -98,7 +99,7 @@ jobs:
         find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t size, size_t num):$/size_t size, size_t num) noexcept:/g' {} \;
         find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef int rwops_bytesio_close(SDL_RWops \*context):/cdef int rwops_bytesio_close(SDL_RWops *context) noexcept:/g' {} \;
         find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef SDL_RWops \*rwops_bridge_to_bytesio(byteio):/cdef SDL_RWops *rwops_bridge_to_bytesio(byteio) noexcept:/g' {} \;
-        
+
 
     - name: Build APK with Buildozer
       run: |
