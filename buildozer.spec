@@ -36,12 +36,12 @@ fullscreen = 0
 # ⚠️ CHANGEMENT: Permissions étendues pour éviter les crashes
 android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE,WAKE_LOCK,VIBRATE
 
-# ⚠️ CHANGEMENT: API compatibles avec le workflow
+# ⚠️ CHANGEMENT: API compatibles avec le workflow - build-tools stable
 android.api = 33
 android.minapi = 21
 android.sdk = 33
 android.ndk = 25b
-android.build_tools = 30.0.3
+android.build_tools = 33.0.2
 
 # ⚠️ CHANGEMENT: Architecture double comme dans le workflow
 android.archs = armeabi-v7a, arm64-v8a
