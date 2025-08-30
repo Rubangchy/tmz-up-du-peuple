@@ -2742,7 +2742,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.5},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='35sp'
                            )
         
@@ -2767,7 +2767,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.65},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='60sp'
                            )
         self.label.bind(size=self._update_text_size)
@@ -2776,12 +2776,12 @@ class MonJeu(FloatLayout):
 
         self.bouton = Button(text="Jouer", size_hint=(0.6, 0.2), pos_hint={"center_x": 0.5, "center_y": 0.25},
                              background_color=(0/255, 128/255, 255/255, 1), color=(1, 1, 1, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='24sp')
+                             font_name="Fredoka-Regular", font_size='24sp')
         self.bouton.bind(on_press=self.choix_equipes)
         self.add_widget(self.bouton)
         self.bouton = Button(text="*", size_hint=(0.2, 0.1), pos_hint={"x": 0.8, "y": 0.9}, 
                              background_color=(0, 0, 0, 0), color=(255/255, 215/255, 0/255, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='50sp')
+                             font_name="Fredoka-Regular", font_size='50sp')
         self.bouton.bind(on_press=self.code_secret)
         self.add_widget(self.bouton)
     
@@ -2793,7 +2793,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.7},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
         self.label.bind(size=self._update_text_size)
@@ -2806,20 +2806,20 @@ class MonJeu(FloatLayout):
             pos_hint={'center_x': 0.5, 'center_y': 0.5},
             font_size=35,
             halign="center",
-            font_name="Fredoka-Regular.ttf"
+            font_name="Fredoka-Regular"
             )
         self.add_widget(self.input)
         Clock.schedule_once(lambda dt: setattr(self.input, 'focus', True), 0.1)
 
         self.bouton = Button(text="Valider", size_hint=(0.3, 0.1), pos_hint={'center_x': 0.5, 'center_y': 0.2},
-                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular.ttf",
+                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular",
                             font_size='24sp')
         self.bouton.bind(on_press=self.verif_code)
         self.add_widget(self.bouton)
 
         self.bouton = Button(text="X", size_hint=(0.2, 0.1), pos_hint={"x": 0.8, "y": 0.9}, 
                              background_color=(139/255, 0/255, 0/255, 1), color=(1, 1, 1, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='40sp')
+                             font_name="Fredoka-Regular", font_size='40sp')
         self.bouton.bind(on_press=self.accueil)
         self.add_widget(self.bouton)
 
@@ -2844,7 +2844,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.8},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
         self.label.bind(size=self._update_text_size)
@@ -2857,13 +2857,13 @@ class MonJeu(FloatLayout):
             pos_hint={'center_x': 0.5, 'center_y': 0.5},
             font_size=35,
             halign="center",
-            font_name="Fredoka-Regular.ttf"
+            font_name="Fredoka-Regular"
             )
         self.add_widget(self.input)
         Clock.schedule_once(lambda dt: setattr(self.input, 'focus', True), 0.1)
 
         self.bouton = Button(text="Valider", size_hint=(0.3, 0.1), pos_hint={'center_x': 0.5, 'center_y': 0.2},
-                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular.ttf",
+                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular",
                             font_size='24sp')
         self.bouton.bind(on_press=self.equipes_choisies)
         self.add_widget(self.bouton)
@@ -2901,7 +2901,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.8},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
         self.label.bind(size=self._update_text_size)
@@ -2914,13 +2914,13 @@ class MonJeu(FloatLayout):
             pos_hint={'center_x': 0.5, 'center_y': 0.5},
             font_size=35,
             halign="center",
-            font_name="Fredoka-Regular.ttf"
+            font_name="Fredoka-Regular"
             )
         self.add_widget(self.input)
         Clock.schedule_once(lambda dt: setattr(self.input, 'focus', True), 0.1)
 
         self.bouton = Button(text="Valider", size_hint=(0.3, 0.1), pos_hint={'center_x': 0.5, 'center_y': 0.2},
-                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular.ttf",
+                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular",
                             font_size='24sp')
         self.bouton.bind(on_press=self.mots_choisis)
         self.add_widget(self.bouton)
@@ -2998,7 +2998,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.8},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
         self.label.bind(size=self._update_text_size)
@@ -3011,13 +3011,13 @@ class MonJeu(FloatLayout):
             pos_hint={'center_x': 0.5, 'center_y': 0.5},
             font_size=35,
             halign="center",
-            font_name="Fredoka-Regular.ttf"
+            font_name="Fredoka-Regular"
             )
         self.add_widget(self.input)
         Clock.schedule_once(lambda dt: setattr(self.input, 'focus', True), 0.1)
 
         self.bouton = Button(text="Valider", size_hint=(0.3, 0.1), pos_hint={'center_x': 0.5, 'center_y': 0.2},
-                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular.ttf",
+                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular",
                             font_size='24sp')
         self.bouton.bind(on_press=self.temps_choisi)
         self.add_widget(self.bouton)
@@ -3045,7 +3045,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.8},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
         self.label.bind(size=self._update_text_size)
@@ -3057,13 +3057,13 @@ class MonJeu(FloatLayout):
             pos_hint={'center_x': 0.5, 'center_y': 0.5},
             font_size=35,
             halign="center",
-            font_name="Fredoka-Regular.ttf"
+            font_name="Fredoka-Regular"
             )
         self.add_widget(self.input)
         Clock.schedule_once(lambda dt: setattr(self.input, 'focus', True), 0.1)
 
         self.bouton = Button(text="Valider", size_hint=(0.3, 0.1), pos_hint={'center_x': 0.5, 'center_y': 0.2},
-                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular.ttf",
+                            background_color=(0/255, 142/255, 35/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular",
                             font_size='24sp')
         self.bouton.bind(on_press=self.nb_indices_choisi)
         self.add_widget(self.bouton)
@@ -3093,7 +3093,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.5},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
         self.label.bind(size=self._update_text_size)
@@ -3139,7 +3139,7 @@ class MonJeu(FloatLayout):
                         pos_hint={'center_x': 0.5, 'center_y': 0.6},
                         halign="center",
                         valign="middle",
-                        font_name="Fredoka-Regular.ttf",
+                        font_name="Fredoka-Regular",
                         font_size='40sp'
                         )
         self.label.bind(size=self._update_text_size)
@@ -3147,7 +3147,7 @@ class MonJeu(FloatLayout):
         self.add_widget(self.label)
 
         self.bouton = Button(text="Commencer", size_hint=(0.5, 0.1), pos_hint={'center_x': 0.5, 'center_y': 0.3}, halign="center", valign="middle",
-                            background_color=(252/255, 81/255, 110/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular.ttf",
+                            background_color=(252/255, 81/255, 110/255, 1), color=(1, 1, 1, 1), font_name="Fredoka-Regular",
                             font_size='24sp')
         self.bouton.bind(on_press=lambda x: self.Tour())
         self.add_widget(self.bouton)
@@ -3169,7 +3169,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.8},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
                 self.label.bind(size=self._update_text_size)
@@ -3178,12 +3178,12 @@ class MonJeu(FloatLayout):
 
                 self.bouton = Button(text="Mort subite", size_hint=(0.5, 0.5), pos_hint={"center_x": 0.25, "center_y": 0.25},
                              background_color=(76/255, 0/255, 153/255, 1), color=(1, 1, 1, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='24sp')
+                             font_name="Fredoka-Regular", font_size='24sp')
                 self.bouton.bind(on_press=self.decision_egalite)
                 self.add_widget(self.bouton)
                 self.bouton = Button(text="Match nul", size_hint=(0.5, 0.5), pos_hint={"center_x": 0.75, "center_y": 0.25},
                              background_color=(192/255, 192/255, 192/255, 1), color=(1, 1, 1, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='24sp')
+                             font_name="Fredoka-Regular", font_size='24sp')
                 self.bouton.bind(on_press=self.decision_egalite)
                 self.add_widget(self.bouton)
                 return
@@ -3205,7 +3205,7 @@ class MonJeu(FloatLayout):
                         pos_hint={'center_x': 0.5, 'center_y': 0.5},
                         halign="center",
                         valign="middle",
-                        font_name="Fredoka-Regular.ttf",
+                        font_name="Fredoka-Regular",
                         font_size='40sp'
                         )
         self.label.bind(size=self._update_text_size)
@@ -3233,7 +3233,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.5},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
             self.label.bind(size=self._update_text_size)
@@ -3265,7 +3265,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.7},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='40sp'
                            )
         self.label.bind(size=self._update_text_size)
@@ -3274,20 +3274,20 @@ class MonJeu(FloatLayout):
 
         self.bouton = Button(text="oui", size_hint=(0.5, 0.1), pos_hint={"center_x": 0.25, "center_y": 0.4}, 
                              background_color=(255/255, 255/255, 0/255, 1), color=(1, 1, 1, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='24sp')
+                             font_name="Fredoka-Regular", font_size='24sp')
         self.bouton.bind(on_press=self.verif)
         self.add_widget(self.bouton)
 
         self.bouton = Button(text="non", size_hint=(0.5, 0.1), pos_hint={"center_x": 0.75, "center_y": 0.4},
                              background_color=(205/255, 133/255, 63/255, 1), color=(1, 1, 1, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='24sp')
+                             font_name="Fredoka-Regular", font_size='24sp')
         self.bouton.bind(on_press=self.verif)
         self.add_widget(self.bouton)
 
         if not self.accès_spécial:
             self.bouton = Button(text="?", size_hint=(0.2, 0.1), pos_hint={"x": 0.8, "y": 0.9}, 
                              background_color=(0, 0, 0, 0), color=(255/255, 215/255, 0/255, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='24sp')
+                             font_name="Fredoka-Regular", font_size='24sp')
             self.bouton.bind(on_press=self.verif_indice)
             self.add_widget(self.bouton)
 
@@ -3301,7 +3301,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.7},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='30sp'
                            )
             self.label.bind(size=self._update_text_size)
@@ -3313,7 +3313,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.25},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='20sp'
                            )
                 self.label.bind(size=self._update_text_size)
@@ -3325,7 +3325,7 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.25},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='20sp'
                            )
                 self.label.bind(size=self._update_text_size)
@@ -3336,14 +3336,14 @@ class MonJeu(FloatLayout):
                            pos_hint={'center_x': 0.5, 'center_y': 0.25},
                            halign="center",
                            valign="middle",
-                           font_name="Fredoka-Regular.ttf",
+                           font_name="Fredoka-Regular",
                            font_size='20sp'
                            )
                 self.label.bind(size=self._update_text_size)
                 self.add_widget(self.label)
             self.bouton = Button(text="retour", size_hint=(0.6, 0.1), pos_hint={"x": 0.2, "y": 0.1},
                                   background_color=(139/255, 0/255, 0/255, 1), color=(1, 1, 1, 1),
-                                    font_name="Fredoka-Regular.ttf", font_size='24sp')
+                                    font_name="Fredoka-Regular", font_size='24sp')
             self.bouton.bind(on_press=lambda x: self.Tour())
             self.add_widget(self.bouton)
         else:
@@ -3430,7 +3430,7 @@ class MonJeu(FloatLayout):
                         pos_hint={'center_x': 0.5, 'center_y': 0.5},
                         halign="center",
                         valign="middle",
-                        font_name="Fredoka-Regular.ttf",
+                        font_name="Fredoka-Regular",
                         font_size='40sp'
                         )
         self.label.bind(size=self._update_text_size)
@@ -3468,7 +3468,7 @@ class MonJeu(FloatLayout):
                             pos_hint={'center_x': 0.5, 'center_y': 0.5},
                             halign="center",
                             valign="middle",
-                            font_name="Fredoka-Regular.ttf",
+                            font_name="Fredoka-Regular",
                             font_size='35sp'
                             )
             
@@ -3497,18 +3497,18 @@ class MonJeu(FloatLayout):
         self.clear_widgets()
         self.bouton = Button(text="Nouvelle Partie", size_hint=(1, 0.5), pos_hint={"center_x": 0.5, "center_y": 0.75},
                              background_color=(0/255, 128/255, 255/255, 1), color=(1, 1, 1, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='24sp')
+                             font_name="Fredoka-Regular", font_size='24sp')
         self.bouton.bind(on_press=self.choix_equipes)
         self.add_widget(self.bouton)
 
         self.bouton = Button(text="Quitter", size_hint=(1, 0.5), pos_hint={"center_x": 0.5, "center_y": 0.25},
                              background_color=(246/255, 119/255, 34/255, 1), color=(1, 1, 1, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='24sp')
+                             font_name="Fredoka-Regular", font_size='24sp')
         self.bouton.bind(on_press=lambda x: App.get_running_app().stop())
         self.add_widget(self.bouton)
         self.bouton = Button(text="*", size_hint=(0.2, 0.1), pos_hint={"x": 0.8, "y": 0.9}, 
                              background_color=(0, 0, 0, 0), color=(255/255, 215/255, 0/255, 1), 
-                             font_name="Fredoka-Regular.ttf", font_size='50sp')
+                             font_name="Fredoka-Regular", font_size='50sp')
         self.bouton.bind(on_press=self.code_secret)
         self.add_widget(self.bouton)
 
