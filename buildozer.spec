@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements - VERSIONS COMPATIBLES STABILISÉES
 # ⚠️ CHANGEMENT IMPORTANT: Versions testées et compatibles
-requirements = python3,kivy==2.1.0,pyjnius==1.4.2,cython==0.29.33,android,plyer
+requirements = python3,kivy==2.1.0,pyjnius==1.4.2,cython==0.29.33,android,plyer,sdl2_ttf
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -137,7 +137,7 @@ android.skip_update = False
 android.accept_sdk_license = True
 
 # (str) Android entry point, default is ok for Kivy-based app
-#android.entrypoint = org.kivy.android.PythonActivity
+android.entrypoint = org.kivy.android.PythonActivity
 
 # (str) Full name including package path of the Java class that implements Android Activity
 #android.activity_class_name = org.kivy.android.PythonActivity
@@ -228,7 +228,7 @@ android.ndk_args = --exclude-libs,libgcc.a
 #android.add_libs_mips = libs/android-mips/*.so
 
 # (bool) Indicate whether the screen should stay on
-#android.wakelock = False
+android.wakelock = False
 
 # (list) Android application meta-data to set (key=value format)
 #android.meta_data =
