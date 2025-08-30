@@ -101,12 +101,6 @@ jobs:
         find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef SDL_RWops \*rwops_bridge_to_bytesio(byteio):/cdef SDL_RWops *rwops_bridge_to_bytesio(byteio) noexcept:/g' {} \;
 
 
-    - name: Build APK with Buildozer
-      run: |
-        # Apply patches before each build step
-        ./apply_patches.sh || true
-        buildozer android debug
-        
     - name: Create patch script
       run: |
         cat > apply_patches.sh << 'EOF'
@@ -149,6 +143,52 @@ jobs:
         echo "Patches applied!"
         EOF
         chmod +x apply_patches.sh
+    
+    - name: Build APK with Buildozer (with continuous patching)
+      run: |
+        # Script pour appliquer les patches en continu pendant la compilation
+        cat > build_with_patches.sh << 'EOF'
+        #!/bin/bash
+        set -e
+        
+        # Fonction pour appliquer les patches
+        apply_patches() {
+            ./apply_patches.sh
+        }
+        
+        # Appliquer les patches initiaux
+        apply_patches
+        
+        # Lancer buildozer en arrière-plan
+        buildozer android debug &
+        BUILD_PID=$!
+        
+        # Surveiller et appliquer les patches toutes les 30 secondes
+        while kill -0 $BUILD_PID 2>/dev/null; do
+            sleep 30
+            echo "Applying patches during build..."
+            apply_patches
+        done
+        
+        # Attendre la fin du processus buildozer
+        wait $BUILD_PID
+        BUILD_EXIT_CODE=$?
+        
+        # Appliquer les patches une dernière fois
+        apply_patches
+        
+        exit $BUILD_EXIT_CODE
+        EOF
+        
+        chmod +x build_with_patches.sh
+        ./build_with_patches.sh
+
+    - name: List generated files
+      run: |
+        echo "Contents of bin directory:"
+        ls -la bin/ || echo "No bin directory found"
+        echo "Searching for APK files:"
+        find . -name "*.apk" -type f || echo "No APK files found"
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
