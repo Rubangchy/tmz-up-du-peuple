@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = Tmz&apos;up du Peuple
+title = Tmz up du Peuple
 
 # (str) Package name
 package.name = tmz_up_du_peuple
