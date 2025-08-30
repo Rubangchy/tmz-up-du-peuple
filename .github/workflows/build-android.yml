@@ -103,7 +103,52 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
+        # Apply patches before each build step
+        ./apply_patches.sh || true
         buildozer android debug
+        
+    - name: Create patch script
+      run: |
+        cat > apply_patches.sh << 'EOF'
+        #!/bin/bash
+        echo "Applying compatibility patches..."
+        # Fix .pxi files
+        find .buildozer -name "*.pxi" -exec sed -i 's/isinstance(arg, long)/isinstance(arg, int)/g' {} \;
+        find .buildozer -name "*.pxi" -exec sed -i 's/, long)/, int)/g' {} \;
+        find .buildozer -name "*.pxi" -exec sed -i 's/(long/(int/g' {} \;
+        find .buildozer -name "*.pxi" -exec sed -i 's/long: /int: /g' {} \;
+        find .buildozer -name "*.pxi" -exec sed -i "s/long: '/int: '/g" {} \;
+        find .buildozer -name "*.pxi" -exec sed -i 's/tp == long/tp == int/g' {} \;
+        # Fix .pyx files
+        find .buildozer -name "*.pyx" -exec sed -i 's/(long, int)/(int, int)/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/cdef long/cdef long long/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/= long(/= int(/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/def long(self):/def __int__(self):/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/return long(/return int(/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/cdef long long size/cdef long long size/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/__init__(self, long/__init__(self, long long/g' {} \;
+        find .buildozer -name "*.pyx" -exec sed -i 's/cdef void grow(self, long /cdef void grow(self, long long /g' {} \;
+        # Fix .pxd files  
+        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long size/cdef long long size/g' {} \;
+        find .buildozer -name "*.pxd" -exec sed -i 's/cdef void grow(self, long/cdef void grow(self, long long/g' {} \;
+        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_size/cdef long long block_size/g' {} \;
+        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_count/cdef long long block_count/g' {} \;
+        # Fix noexcept issues
+        find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/char \*data, int datasize) with gil:/char *data, int datasize) noexcept with gil:/g' {} \;
+        find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/void \*c_player, GstMessage \*message) with gil:/void *c_player, GstMessage *message) noexcept with gil:/g' {} \;
+        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/userdata, SDL_Event \*event) with gil:/userdata, SDL_Event *event) noexcept with gil:/g' {} \;
+        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/const SDL_Point\* pts, void\* data) with gil:/const SDL_Point* pts, void* data) noexcept with gil:/g' {} \;
+        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/cpdef SDL_WindowShapeMode sdl_window_mode/cdef SDL_WindowShapeMode sdl_window_mode/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/long (\* seek) (SDL_RWops \* context, long offset,int whence)/long (* seek) (SDL_RWops * context, long offset,int whence) noexcept/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* read) ( SDL_RWops \* context, void \*ptr, size_t size, size_t maxnum)/size_t(* read) ( SDL_RWops * context, void *ptr, size_t size, size_t maxnum) noexcept/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* write) (SDL_RWops \* context, void \*ptr,size_t size, size_t num)/size_t(* write) (SDL_RWops * context, void *ptr,size_t size, size_t num) noexcept/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/int (\* close) (SDL_RWops \* context)/int (* close) (SDL_RWops * context) noexcept/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t size, size_t num):$/size_t size, size_t num) noexcept:/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef int rwops_bytesio_close(SDL_RWops \*context):/cdef int rwops_bytesio_close(SDL_RWops *context) noexcept:/g' {} \;
+        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef SDL_RWops \*rwops_bridge_to_bytesio(byteio):/cdef SDL_RWops *rwops_bridge_to_bytesio(byteio) noexcept:/g' {} \;
+        echo "Patches applied!"
+        EOF
+        chmod +x apply_patches.sh
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
