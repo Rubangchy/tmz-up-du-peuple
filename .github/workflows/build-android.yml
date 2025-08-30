@@ -61,127 +61,171 @@ jobs:
         path: .buildozer
         key: ${{ runner.os }}-buildozer-project-${{ hashFiles('buildozer.spec') }}
 
-    - name: Fix pyjnius long type compatibility
+    - name: Create smart patch script
       run: |
-        # Wait for buildozer to download python-for-android, then fix the files
-        buildozer android update || true
-        # Fix .pxi files
-        find .buildozer -name "*.pxi" -exec sed -i 's/isinstance(arg, long)/isinstance(arg, int)/g' {} \;
-        find .buildozer -name "*.pxi" -exec sed -i 's/, long)/, int)/g' {} \;
-        find .buildozer -name "*.pxi" -exec sed -i 's/(long/(int/g' {} \;
-        find .buildozer -name "*.pxi" -exec sed -i 's/long: /int: /g' {} \;
-        find .buildozer -name "*.pxi" -exec sed -i "s/long: '/int: '/g" {} \;
-        find .buildozer -name "*.pxi" -exec sed -i 's/tp == long/tp == int/g' {} \;
-        # Fix .pyx files
-        find .buildozer -name "*.pyx" -exec sed -i 's/(long, int)/(int, int)/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/cdef long/cdef long long/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/= long(/= int(/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/def long(self):/def __int__(self):/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/return long(/return int(/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/cdef long long size/cdef long long size/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/__init__(self, long/__init__(self, long long/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/cdef void grow(self, long /cdef void grow(self, long long /g' {} \;
-        # Fix .pxd files  
-        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long size/cdef long long size/g' {} \;
-        find .buildozer -name "*.pxd" -exec sed -i 's/cdef void grow(self, long/cdef void grow(self, long long/g' {} \;
-        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_size/cdef long long block_size/g' {} \;
-        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_count/cdef long long block_count/g' {} \;
-        # Fix noexcept issues in specific files
-        find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/char \*data, int datasize) with gil:/char *data, int datasize) noexcept with gil:/g' {} \;
-        find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/void \*c_player, GstMessage \*message) with gil:/void *c_player, GstMessage *message) noexcept with gil:/g' {} \;
-        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/userdata, SDL_Event \*event) with gil:/userdata, SDL_Event *event) noexcept with gil:/g' {} \;
-        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/const SDL_Point\* pts, void\* data) with gil:/const SDL_Point* pts, void* data) noexcept with gil:/g' {} \;
-        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/cpdef SDL_WindowShapeMode sdl_window_mode/cdef SDL_WindowShapeMode sdl_window_mode/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/long (\* seek) (SDL_RWops \* context, long offset,int whence)/long (* seek) (SDL_RWops * context, long offset,int whence) noexcept/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* read) ( SDL_RWops \* context, void \*ptr, size_t size, size_t maxnum)/size_t(* read) ( SDL_RWops * context, void *ptr, size_t size, size_t maxnum) noexcept/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* write) (SDL_RWops \* context, void \*ptr,size_t size, size_t num)/size_t(* write) (SDL_RWops * context, void *ptr,size_t size, size_t num) noexcept/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/int (\* close) (SDL_RWops \* context)/int (* close) (SDL_RWops * context) noexcept/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t size, size_t num):$/size_t size, size_t num) noexcept:/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef int rwops_bytesio_close(SDL_RWops \*context):/cdef int rwops_bytesio_close(SDL_RWops *context) noexcept:/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef SDL_RWops \*rwops_bridge_to_bytesio(byteio):/cdef SDL_RWops *rwops_bridge_to_bytesio(byteio) noexcept:/g' {} \;
-
-
-    - name: Create patch script
-      run: |
-        cat > apply_patches.sh << 'EOF'
+        cat > apply_smart_patches.sh << 'EOF'
         #!/bin/bash
-        echo "Applying compatibility patches..."
-        # Fix .pxi files
-        find .buildozer -name "*.pxi" -exec sed -i 's/isinstance(arg, long)/isinstance(arg, int)/g' {} \;
-        find .buildozer -name "*.pxi" -exec sed -i 's/, long)/, int)/g' {} \;
-        find .buildozer -name "*.pxi" -exec sed -i 's/(long/(int/g' {} \;
-        find .buildozer -name "*.pxi" -exec sed -i 's/long: /int: /g' {} \;
-        find .buildozer -name "*.pxi" -exec sed -i "s/long: '/int: '/g" {} \;
-        find .buildozer -name "*.pxi" -exec sed -i 's/tp == long/tp == int/g' {} \;
-        # Fix .pyx files
-        find .buildozer -name "*.pyx" -exec sed -i 's/(long, int)/(int, int)/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/cdef long/cdef long long/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/= long(/= int(/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/def long(self):/def __int__(self):/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/return long(/return int(/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/cdef long long size/cdef long long size/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/__init__(self, long/__init__(self, long long/g' {} \;
-        find .buildozer -name "*.pyx" -exec sed -i 's/cdef void grow(self, long /cdef void grow(self, long long /g' {} \;
-        # Fix .pxd files  
-        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long size/cdef long long size/g' {} \;
-        find .buildozer -name "*.pxd" -exec sed -i 's/cdef void grow(self, long/cdef void grow(self, long long/g' {} \;
-        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_size/cdef long long block_size/g' {} \;
-        find .buildozer -name "*.pxd" -exec sed -i 's/cdef long block_count/cdef long long block_count/g' {} \;
-        # Fix noexcept issues
-        find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/char \*data, int datasize) with gil:/char *data, int datasize) noexcept with gil:/g' {} \;
-        find .buildozer -name "_gstplayer.pyx" -exec sed -i 's/void \*c_player, GstMessage \*message) with gil:/void *c_player, GstMessage *message) noexcept with gil:/g' {} \;
-        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/userdata, SDL_Event \*event) with gil:/userdata, SDL_Event *event) noexcept with gil:/g' {} \;
-        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/const SDL_Point\* pts, void\* data) with gil:/const SDL_Point* pts, void* data) noexcept with gil:/g' {} \;
-        find .buildozer -name "_window_sdl2.pyx" -exec sed -i 's/cpdef SDL_WindowShapeMode sdl_window_mode/cdef SDL_WindowShapeMode sdl_window_mode/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/long (\* seek) (SDL_RWops \* context, long offset,int whence)/long (* seek) (SDL_RWops * context, long offset,int whence) noexcept/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* read) ( SDL_RWops \* context, void \*ptr, size_t size, size_t maxnum)/size_t(* read) ( SDL_RWops * context, void *ptr, size_t size, size_t maxnum) noexcept/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t(\* write) (SDL_RWops \* context, void \*ptr,size_t size, size_t num)/size_t(* write) (SDL_RWops * context, void *ptr,size_t size, size_t num) noexcept/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/int (\* close) (SDL_RWops \* context)/int (* close) (SDL_RWops * context) noexcept/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/size_t size, size_t num):$/size_t size, size_t num) noexcept:/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef int rwops_bytesio_close(SDL_RWops \*context):/cdef int rwops_bytesio_close(SDL_RWops *context) noexcept:/g' {} \;
-        find .buildozer -name "_img_sdl2.pyx" -exec sed -i 's/cdef SDL_RWops \*rwops_bridge_to_bytesio(byteio):/cdef SDL_RWops *rwops_bridge_to_bytesio(byteio) noexcept:/g' {} \;
-        echo "Patches applied!"
-        EOF
-        chmod +x apply_patches.sh
-    
-    - name: Build APK with Buildozer (with continuous patching)
-      run: |
-        # Script pour appliquer les patches en continu pendant la compilation
-        cat > build_with_patches.sh << 'EOF'
-        #!/bin/bash
-        set -e
+        echo "Applying smart compatibility patches..."
         
-        # Fonction pour appliquer les patches
-        apply_patches() {
-            ./apply_patches.sh
+        # Fonction pour appliquer un patch seulement si nécessaire
+        safe_replace() {
+            local file="$1"
+            local search="$2"
+            local replace="$3"
+            
+            # Vérifier si le fichier existe et contient le pattern à remplacer
+            if [ -f "$file" ] && grep -q "$search" "$file"; then
+                # Éviter les doublons - ne pas remplacer si déjà patché
+                if ! grep -q "$replace" "$file"; then
+                    sed -i "s/$search/$replace/g" "$file"
+                    echo "Patched: $file"
+                fi
+            fi
         }
         
+        # Fix .pxi files - avec vérifications anti-doublon
+        find .buildozer -name "*.pxi" -type f | while read file; do
+            # Éviter isinstance(arg, int) → isinstance(arg, int)
+            if grep -q "isinstance(arg, long)" "$file" && ! grep -q "isinstance(arg, int)" "$file"; then
+                sed -i 's/isinstance(arg, long)/isinstance(arg, int)/g' "$file"
+            fi
+            
+            # Autres remplacements sécurisés
+            grep -q ", long)" "$file" && ! grep -q ", int)" "$file" && sed -i 's/, long)/, int)/g' "$file"
+            grep -q "(long" "$file" && sed -i 's/(long/(int/g' "$file"
+            grep -q "long: " "$file" && sed -i 's/long: /int: /g' "$file"
+            grep -q "long: '" "$file" && sed -i "s/long: '/int: '/g" "$file"
+            grep -q "tp == long" "$file" && sed -i 's/tp == long/tp == int/g' "$file"
+        done
+        
+        # Fix .pyx files - avec protection contre les doublons
+        find .buildozer -name "*.pyx" -type f | while read file; do
+            # Remplacements sécurisés pour éviter long long long long
+            if grep -q "(long, int)" "$file" && ! grep -q "(int, int)" "$file"; then
+                sed -i 's/(long, int)/(int, int)/g' "$file"
+            fi
+            
+            # Pour cdef long, vérifier qu'on n'a pas déjà long long
+            if grep -q "cdef long[^[:space:]]" "$file" && ! grep -q "cdef long long" "$file"; then
+                sed -i 's/cdef long\([^[:space:]]\)/cdef long long\1/g' "$file"
+            fi
+            
+            grep -q "= long(" "$file" && sed -i 's/= long(/= int(/g' "$file"
+            grep -q "def long(self):" "$file" && sed -i 's/def long(self):/def __int__(self):/g' "$file"
+            grep -q "return long(" "$file" && sed -i 's/return long(/return int(/g' "$file"
+            
+            # Protéger contre les doublons pour __init__
+            if grep -q "__init__(self, long[[:space:]]" "$file" && ! grep -q "__init__(self, long long" "$file"; then
+                sed -i 's/__init__(self, long /__init__(self, long long /g' "$file"
+            fi
+            
+            # Protéger contre les doublons pour grow
+            if grep -q "cdef void grow(self, long[[:space:]]" "$file" && ! grep -q "cdef void grow(self, long long" "$file"; then
+                sed -i 's/cdef void grow(self, long /cdef void grow(self, long long /g' "$file"
+            fi
+        done
+        
+        # Fix .pxd files - avec protection anti-doublon
+        find .buildozer -name "*.pxd" -type f | while read file; do
+            if grep -q "cdef long size" "$file" && ! grep -q "cdef long long size" "$file"; then
+                sed -i 's/cdef long size/cdef long long size/g' "$file"
+            fi
+            
+            if grep -q "cdef void grow(self, long" "$file" && ! grep -q "cdef void grow(self, long long" "$file"; then
+                sed -i 's/cdef void grow(self, long/cdef void grow(self, long long/g' "$file"
+            fi
+            
+            if grep -q "cdef long block_size" "$file" && ! grep -q "cdef long long block_size" "$file"; then
+                sed -i 's/cdef long block_size/cdef long long block_size/g' "$file"
+            fi
+            
+            if grep -q "cdef long block_count" "$file" && ! grep -q "cdef long long block_count" "$file"; then
+                sed -i 's/cdef long block_count/cdef long long block_count/g' "$file"
+            fi
+        done
+        
+        # Fix noexcept issues - vérifier si déjà patché
+        find .buildozer -name "_gstplayer.pyx" -exec sh -c '
+            file="$1"
+            if [ -f "$file" ]; then
+                if grep -q "char \*data, int datasize) with gil:" "$file" && ! grep -q "char \*data, int datasize) noexcept with gil:" "$file"; then
+                    sed -i "s/char \\*data, int datasize) with gil:/char *data, int datasize) noexcept with gil:/g" "$file"
+                fi
+                if grep -q "void \*c_player, GstMessage \*message) with gil:" "$file" && ! grep -q "void \*c_player, GstMessage \*message) noexcept with gil:" "$file"; then
+                    sed -i "s/void \\*c_player, GstMessage \\*message) with gil:/void *c_player, GstMessage *message) noexcept with gil:/g" "$file"
+                fi
+            fi
+        ' sh {} \;
+        
+        find .buildozer -name "_window_sdl2.pyx" -exec sh -c '
+            file="$1"
+            if [ -f "$file" ]; then
+                if grep -q "userdata, SDL_Event \*event) with gil:" "$file" && ! grep -q "userdata, SDL_Event \*event) noexcept with gil:" "$file"; then
+                    sed -i "s/userdata, SDL_Event \\*event) with gil:/userdata, SDL_Event *event) noexcept with gil:/g" "$file"
+                fi
+                if grep -q "const SDL_Point\* pts, void\* data) with gil:" "$file" && ! grep -q "const SDL_Point\* pts, void\* data) noexcept with gil:" "$file"; then
+                    sed -i "s/const SDL_Point\\* pts, void\\* data) with gil:/const SDL_Point* pts, void* data) noexcept with gil:/g" "$file"
+                fi
+                if grep -q "cpdef SDL_WindowShapeMode sdl_window_mode" "$file"; then
+                    sed -i "s/cpdef SDL_WindowShapeMode sdl_window_mode/cdef SDL_WindowShapeMode sdl_window_mode/g" "$file"
+                fi
+            fi
+        ' sh {} \;
+        
+        find .buildozer -name "_img_sdl2.pyx" -exec sh -c '
+            file="$1"
+            if [ -f "$file" ]; then
+                # Appliquer les patches seulement si pas déjà présents
+                ! grep -q "noexcept" "$file" && {
+                    sed -i "s/long (* seek) (SDL_RWops \* context, long offset,int whence)/long (* seek) (SDL_RWops * context, long offset,int whence) noexcept/g" "$file"
+                    sed -i "s/size_t(* read) ( SDL_RWops \* context, void \*ptr, size_t size, size_t maxnum)/size_t(* read) ( SDL_RWops * context, void *ptr, size_t size, size_t maxnum) noexcept/g" "$file"
+                    sed -i "s/size_t(* write) (SDL_RWops \* context, void \*ptr,size_t size, size_t num)/size_t(* write) (SDL_RWops * context, void *ptr,size_t size, size_t num) noexcept/g" "$file"
+                    sed -i "s/int (* close) (SDL_RWops \* context)/int (* close) (SDL_RWops * context) noexcept/g" "$file"
+                    sed -i "s/size_t size, size_t num):$/size_t size, size_t num) noexcept:/g" "$file"
+                    sed -i "s/cdef int rwops_bytesio_close(SDL_RWops \*context):/cdef int rwops_bytesio_close(SDL_RWops *context) noexcept:/g" "$file"
+                    sed -i "s/cdef SDL_RWops \*rwops_bridge_to_bytesio(byteio):/cdef SDL_RWops *rwops_bridge_to_bytesio(byteio) noexcept:/g" "$file"
+                }
+            fi
+        ' sh {} \;
+        
+        echo "Smart patches applied safely!"
+        EOF
+        chmod +x apply_smart_patches.sh
+
+    - name: Initial buildozer setup and first patch
+      run: |
+        # Initialiser buildozer et télécharger les dépendances
+        buildozer android update || true
         # Appliquer les patches initiaux
-        apply_patches
+        ./apply_smart_patches.sh
+
+    - name: Build APK with smart patching for all architectures
+      run: |
+        cat > build_with_smart_patches.sh << 'EOF'
+        #!/bin/bash
+        set -e
         
         # Lancer buildozer en arrière-plan
         buildozer android debug &
         BUILD_PID=$!
         
-        # Surveiller et appliquer les patches toutes les 30 secondes
+        # Appliquer les patches toutes les 15 secondes pendant la compilation
         while kill -0 $BUILD_PID 2>/dev/null; do
-            sleep 30
-            echo "Applying patches during build..."
-            apply_patches
+            sleep 15
+            echo "Applying smart patches for current architecture..."
+            ./apply_smart_patches.sh
         done
         
-        # Attendre la fin du processus buildozer
+        # Attendre la fin de buildozer
         wait $BUILD_PID
         BUILD_EXIT_CODE=$?
         
-        # Appliquer les patches une dernière fois
-        apply_patches
-        
+        echo "Build completed with exit code: $BUILD_EXIT_CODE"
         exit $BUILD_EXIT_CODE
         EOF
         
-        chmod +x build_with_patches.sh
-        ./build_with_patches.sh
+        chmod +x build_with_smart_patches.sh
+        ./build_with_smart_patches.sh
 
     - name: List generated files
       run: |
